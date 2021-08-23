@@ -1,5 +1,6 @@
 package com.example.countries.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,22 +13,38 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.countries.R;
+import com.example.countries.models.Country;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CountryViewHolder>  {
     private static final String TAG = "RecyclerAdapter";
 
     private Context context;
-    private ArrayList<String> nativeNames = new ArrayList<>();
-    private ArrayList<String> englishNames = new ArrayList<>();
-    private ArrayList<String> areas = new ArrayList<>();
+    private ArrayList<String> nativeNames;
+    private ArrayList<String> englishNames;
+    private ArrayList<String> areas;
 
-    public RecyclerAdapter(Context context, ArrayList<String> nativeNames, ArrayList<String> englishNames, ArrayList<String> areas) {
-        this.nativeNames = nativeNames;
-        this.englishNames = englishNames;
-        this.areas = areas;
-        this.context = context;
+    //constructor with list of countries
+    public RecyclerAdapter(Activity activity, List<Country> countries) {
+        //TODO init
+        this.nativeNames = new ArrayList<>();
+        this.englishNames = new ArrayList<>();
+        this.areas = new ArrayList<>();
+        this.context = activity;
+
+        if(countries != null && countries.size() > 0) {
+            for (Country country : countries) {
+                if(country != null) {
+                    nativeNames.add(country.getNativeName());
+                    englishNames.add(country.getEnglishName());
+                    areas.add(country.getArea());
+                }
+            }
+        }
+
+        //TODO - add lists validations, same length, not null
     }
 
     @Override
@@ -40,12 +57,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Countr
     @Override
     public void onBindViewHolder(RecyclerAdapter.CountryViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder called");
-        
-        
-        
-        
-        
-        
 
         holder.countryNativeName.setText(nativeNames.get(position));
         holder.countryEnglishName.setText(englishNames.get(position));
