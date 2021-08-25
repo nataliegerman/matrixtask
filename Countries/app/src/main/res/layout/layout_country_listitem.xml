@@ -7,41 +7,30 @@
     android:id="@+id/country_parent_layout">
 
     <TextView
-        android:id="@+id/country_native_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_centerVertical="true"
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:layout_weight="2"
-        android:text="חיעגכחיה"
-        tools:text="ישראל"/>
-
-    <TextView
         android:id="@+id/country_english_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/country_native_name"
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:layout_weight="2"
-        android:text="Testtt2"
+        android:textSize="16sp"
+        android:layout_weight="1"
         tools:text="Israel"/>
 
     <TextView
-        android:id="@+id/country_area"
-        android:layout_width="wrap_content"
+        android:id="@+id/country_native_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/country_english_name"
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
+        android:textSize="16sp"
         android:layout_weight="1"
-        android:text="114174.0"
+        tools:text="ישראל"/>
+
+    <TextView
+        android:id="@+id/country_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_weight="1"
         tools:text="114174.0"/>
 
 </LinearLayout>

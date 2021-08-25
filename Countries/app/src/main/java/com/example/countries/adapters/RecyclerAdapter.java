@@ -2,6 +2,7 @@ package com.example.countries.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.countries.CountryBordersActivity;
+import com.example.countries.MainActivity;
 import com.example.countries.R;
 import com.example.countries.models.Country;
 
@@ -64,8 +67,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Countr
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on: " + englishNames.get(position));
+                String clickedCountry = englishNames.get(position);
+                Log.d(TAG, "onClick: clicked on: " + clickedCountry);
                 Toast.makeText(context, englishNames.get(position), Toast.LENGTH_SHORT).show();
+                //open borders activity
+                Context context = view.getContext();
+                Intent intent = new Intent(context , CountryBordersActivity.class);
+                intent.putExtra(context.getResources().getString(R.string.EXTRA_COUNTRY_NAME), clickedCountry);
+                context.startActivity(intent);
             }
         });
     }

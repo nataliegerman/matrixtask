@@ -6,19 +6,25 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.constraintlayout.widget.Guideline
+    <Button
+        android:id="@+id/sort_by_name_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/guideline"
-        app:layout_constraintGuide_begin="100dp"
-        android:orientation="vertical"/>
+        android:text="sort by name"/>
+
+    <ProgressBar
+        android:id="@+id/loading_spinner"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@+id/guideline"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_below="@+id/sort_by_name_btn"
+        android:layout_marginTop="16dp" />
 
 </RelativeLayout>
