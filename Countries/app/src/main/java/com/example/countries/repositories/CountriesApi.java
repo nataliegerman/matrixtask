@@ -1,6 +1,6 @@
 package com.example.countries.repositories;
 
-import com.example.countries.models.CountryResponseData;
+import com.example.countries.models.Country;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ public interface CountriesApi {
 
     String BASE_URL = "https://restcountries.eu/rest/v2/"; //?fields=name;nativeName;area;alpha3Code;borders
     @GET("all")
-    Call<List<CountryResponseData>> getCountriesData();
+    Call<List<Country>> getCountriesData();
 }

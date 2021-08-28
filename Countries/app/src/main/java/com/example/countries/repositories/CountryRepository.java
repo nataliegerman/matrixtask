@@ -5,10 +5,11 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.countries.models.Country;
-import com.example.countries.models.CountryResponseData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,72 +21,71 @@ public class CountryRepository {
 
     private static final String TAG = "CountryRepository";
     private static CountryRepository instance;
-    private ArrayList<Country> dataSet = new ArrayList<>();
-    MutableLiveData<List<Country>> data = new MutableLiveData<>();
+    private ArrayList<Country> countriesDataSet = new ArrayList<>();
+    private Map<String, Country> countriesNamesByCodeMap;
+    MutableLiveData<List<Country>> countriesLiveData = new MutableLiveData<>();
+    MutableLiveData<Map<String, Country>> countriesNamesByCodeLiveData = new MutableLiveData<>();
+
 
     public static CountryRepository getInstance() {
-        if(instance == null){
+        if (instance == null) {
             instance = new CountryRepository();
         }
         return instance;
     }
 
     //access data here
-    public MutableLiveData<List<Country>> getCountries(){
-        //retrieve the data from web
-        setCountries();
-
-//        MutableLiveData<List<Country>> data = new MutableLiveData<>();
-        //set the retrieved data
-        data.setValue(dataSet);
-        Log.d(TAG, " data.setValue(dataSet)");
-        return data;
+    public MutableLiveData<List<Country>> getCountries() {
+        //retrieve the data from web, access REST api
+        getCountriesRequest();
+        return countriesLiveData;
     }
 
-    private void setCountries(){
-        //just for test - hardcoded data
-//        int countriesAmount = 2;
-//        for (int i = 0; i < countriesAmount; i++) {
-//            dataSet.add(new Country(" עברית שיהי" + i, "english country name " + i, "13245." + i));
-//        }
-        //TODO access REST api here
-        getCountriesRequest();
+    //countriesNamesByCodeLiveData
+    public MutableLiveData<Map<String, Country>> getCountriesByCode() {
+        return countriesNamesByCodeLiveData;
     }
 
     private void getCountriesRequest() {
-        Call<List<CountryResponseData>> call = RetrofitClient.getInstance().getMyApi().getCountriesData();
-        call.enqueue(new Callback<List<CountryResponseData>>() {
+        Call<List<Country>> call = RetrofitClient.getInstance().getMyApi().getCountriesData();
+        call.enqueue(new Callback<List<Country>>() {
             @Override
-            public void onResponse(Call<List<CountryResponseData>> call, Response<List<CountryResponseData>> response) {
-                if(response != null && response.body() != null) {
-                    List<CountryResponseData> countriesList = response.body();
+            public void onResponse(Call<List<Country>> call, Response<List<Country>> response) {
+                if (response != null && response.body() != null) {
+                    List<Country> countriesList = response.body();
                     ArrayList<Country> countries = new ArrayList<>();
                     String[] oneCountry = new String[countriesList.size()];
+                    countriesNamesByCodeMap = new HashMap<>();
 
                     for (int i = 0; i < countriesList.size(); i++) {
-                        oneCountry[i] = countriesList.get(i).getName();
-                        String name = countriesList.get(i).getName();
+                        oneCountry[i] = countriesList.get(i).getEnglishName();
+                        String name = countriesList.get(i).getEnglishName();
                         String nativeName = countriesList.get(i).getNativeName();
                         String area = countriesList.get(i).getArea();
                         String countryCode = countriesList.get(i).getAlpha3Code();
-                        ArrayList<String> borders = countriesList.get(i).getBorders();
-                        countries.add(new Country(nativeName, name, area));
+                        String[] borders = countriesList.get(i).getBorders();
+                        Country newCountry = new Country(name, nativeName, area, countryCode, borders);
+                        countries.add(newCountry);
+                        countriesNamesByCodeMap.put(countryCode, newCountry);
                         Log.d(TAG, "setCountries: new country added, " + nativeName + " " + name + " " + area + " borders: " + borders);
                     }
-                    dataSet = countries;
+                    countriesDataSet = countries;
                     //set the retrieved data
-                    data.setValue(dataSet);
+                    countriesLiveData.setValue(countriesDataSet);
+                    countriesNamesByCodeLiveData.setValue(countriesNamesByCodeMap);
                 }
-//                //set the retrieved data
-//                data.setValue(dataSet);
             }
 
             @Override
-            public void onFailure(Call<List<CountryResponseData>> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "An error has occured", Toast.LENGTH_LONG).show();
-                Log.d(TAG, "onFailure");
+            public void onFailure(Call<List<Country>> call, Throwable t) {
+                Log.d(TAG, "request failed");
             }
 
         });
+    }
+
+
+    public Map<String, Country> getCountriesNamesByCodeMap() {
+        return countriesNamesByCodeMap;
     }
 }

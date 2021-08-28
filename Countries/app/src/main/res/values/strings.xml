@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Countries</string>
+
     <string name="EXTRA_COUNTRY_NAME">EXTRA_COUNTRY_NAME</string>
+    <string name="EXTRA_COUNTRY_BORDERS_CODES">EXTRA_COUNTRY_BORDERS_CODES</string>
+    <string name="EXTRA_BORDERING_COUNTRIES_LIST">EXTRA_BORDERING_COUNTRIES_LIST</string>
+
+    <string name="borders_activity_title">\'s borders: </string>
+    <string name="sort_by_name_btn">sort by name</string>
+    <string name="sort_by_area_btn">sort by area</string>
+    <string name="no_borders_txt">" has no bordering countries"</string>
 </resources>

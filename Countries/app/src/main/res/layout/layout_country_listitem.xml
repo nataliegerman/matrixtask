@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/country_parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="15dp"
-    android:id="@+id/country_parent_layout">
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
 
     <TextView
         android:id="@+id/country_english_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="5dp"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:layout_weight="1"
-        tools:text="Israel"/>
+        tools:text="Israel" />
 
     <TextView
         android:id="@+id/country_native_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="5dp"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:layout_weight="1"
-        tools:text="ישראל"/>
+        tools:text="ישראל" />
 
     <TextView
         android:id="@+id/country_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:padding="5dp"
         android:textColor="@color/black"
         android:textSize="16sp"
-        android:layout_weight="1"
-        tools:text="114174.0"/>
+        tools:text="114174.0" />
 
 </LinearLayout>
