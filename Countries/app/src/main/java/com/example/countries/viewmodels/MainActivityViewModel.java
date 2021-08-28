@@ -9,6 +9,7 @@ import com.example.countries.models.Country;
 import com.example.countries.repositories.CountryRepository;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class MainActivityViewModel extends ViewModel {
     private static final String TAG = "MainActivityViewModel";
-    private MutableLiveData<List<Country>> mCountries;
+    private MutableLiveData<List<Country>> countriesLiveData;
     private MutableLiveData<Map<String, Country>> countriesByCodeLiveData = new MutableLiveData<>();
     private Map<String, Country> countriesByCodeMap;
 
@@ -26,11 +27,11 @@ public class MainActivityViewModel extends ViewModel {
     private CountryRepository mRepository;
 
     public void init() {
-        if (mCountries != null && mCountries.getValue().size() > 0) {
+        if (countriesLiveData != null && countriesLiveData.getValue() != null && countriesLiveData.getValue().size() > 0) {
             return; //already retrieved the data
         }
         mRepository = CountryRepository.getInstance();
-        mCountries = mRepository.getCountries();
+        countriesLiveData = mRepository.getCountries();
         countriesByCodeLiveData = mRepository.getCountriesByCode();
         isAscending.setValue(true); //default is true
         if (countriesByCodeLiveData != null)
@@ -38,7 +39,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public LiveData<List<Country>> getCountriesLiveData() {
-        return mCountries;
+        return countriesLiveData;
     }
 
     public MutableLiveData<Boolean> getIsAscending() {
@@ -48,8 +49,10 @@ public class MainActivityViewModel extends ViewModel {
     public void sortCountries(MainActivity.SortType sortType) {
         //sorting countries has started, set isUpdating to true in order to show the loading spinner
         isUpdating.postValue(true);
-
-        List<Country> sortedCountries = mCountries.getValue();
+        List<Country> sortedCountries = new ArrayList<>();
+        if (countriesLiveData != null && countriesLiveData.getValue() != null) {
+            sortedCountries = countriesLiveData.getValue();
+        }
         //sort by name or area
         switch (sortType) {
             case AREA:
@@ -66,16 +69,16 @@ public class MainActivityViewModel extends ViewModel {
                         //null check since some countries have no area in this API response
                         String c1_area_str = c1.getArea();
                         String c2_area_str = c2.getArea();
-                        if(c1_area_str != null) {
+                        if (c1_area_str != null) {
                             c1_area = Float.parseFloat(c1_area_str);
                         }
-                       if(c2_area_str != null) {
-                           c2_area = Float.parseFloat(c2_area_str);
-                       }
+                        if (c2_area_str != null) {
+                            c2_area = Float.parseFloat(c2_area_str);
+                        }
                         return c1_area.compareTo(c2_area);
                     }
                 });
-                checkSortIsAscending(sortedCountries);
+                isSortAscending(sortedCountries);
                 break;
             case NAME:
                 //sort by name
@@ -89,24 +92,27 @@ public class MainActivityViewModel extends ViewModel {
                 });
 
                 //check if reversed
-                checkSortIsAscending(sortedCountries);
+                isSortAscending(sortedCountries);
                 break;
         }
 
-        //update data
-        mCountries.postValue(sortedCountries);
+        //update countries data
+        countriesLiveData.postValue(sortedCountries);
 
         //update is complete, set isUpdating to false in order to hide the loading spinner
         isUpdating.postValue(false);
     }
 
-    private void checkSortIsAscending( List<Country> sortedCountries) {
-        //check if reversed
-        if (!isAscending.getValue()) {
-            Collections.reverse(sortedCountries);
-            isAscending.postValue(true);
-        } else {
-            isAscending.postValue(false);
+    //every time the sort button is clicked (no matter by name or area), need to update "isAscending" to the opposite value
+    private void isSortAscending(List<Country> sortedCountries) {
+        if (isAscending != null) {
+            //check if reversed
+            if (isAscending.getValue()) {
+                Collections.reverse(sortedCountries);
+                isAscending.postValue(false);
+            } else {
+                isAscending.postValue(true);
+            }
         }
         isUpdating.postValue(false);
     }

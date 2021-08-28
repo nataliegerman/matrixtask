@@ -63,9 +63,8 @@ public class Country implements Serializable {
         return borders;
     }
 
-    //some area values are empty or hexa, replace with valid data in order to sort properly
+    //some area values are empty or exponential, replace with valid data in order to sort properly
     private String validateArea(String area) {
-        //for Antarctica the area has hexa format - "1.4E7"
         if (area == null) {
             return "0.0";
         }
@@ -73,7 +72,7 @@ public class Country implements Serializable {
         if (area.toUpperCase().contains("E")) {
             BigDecimal bigDecimalValue = new BigDecimal(area);
             try {
-                area = bigDecimalValue.toString();
+                area = bigDecimalValue.setScale(1,BigDecimal.ROUND_UP).toPlainString();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -85,7 +84,7 @@ public class Country implements Serializable {
         if(name == null) {
             return ""; //in case the name is null replace with empty string
         }
-        //one country returns with non english characters in english name value - "name":"Åland Islands"
+        //one country has a non english characters in english name value (API bug) - "name":"Åland Islands"
         //in order to sort properly by name, replace with english "A"
         if(name.contains("Å")) {
             name = name.replace("Å", "A");

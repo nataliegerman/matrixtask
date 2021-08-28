@@ -12,9 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.example.countries.adapters.RecyclerAdapter;
+import com.example.countries.adapters.CountriesRecyclerAdapter;
 import com.example.countries.models.Country;
 import com.example.countries.viewmodels.MainActivityViewModel;
 
@@ -31,16 +30,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-
     private RecyclerView recyclerView;
     private ProgressBar spinner;
     private Button sortByNameBtn;
     private Button sortByAreaBtn;
 
-    private RecyclerAdapter mAdapter;
+    private CountriesRecyclerAdapter mAdapter;
 
     private MainActivityViewModel mainActivityViewModel;
-    private Map<String, Country> countriesByCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +71,8 @@ public class MainActivity extends AppCompatActivity {
                 if (aBoolean) {
                     //show spinner
                     spinner.setVisibility(View.VISIBLE);
-                    Log.d(TAG, " spinner.setVisibility(View.VISIBLE)");
                 } else {
                     //hide spinner
-                    // recyclerView.smoothScrollToPosition(mainActivityViewModel.getCountriesLiveData().getValue().size() - 1); //just for test. TODO - remove
                     spinner.setVisibility(View.INVISIBLE);
                 }
                 mAdapter.notifyDataSetChanged();
@@ -95,31 +90,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Map<String, Country> stringCountryMap) {
                 Log.d(TAG, "countries by code updated");
-                if (mainActivityViewModel.getCountriesByCodeLiveData() != null)
-                    countriesByCode = mainActivityViewModel.getCountriesByCodeLiveData().getValue();
             }
         });
 
-        sortByNameBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //sort countries by name and update livedata
-                mainActivityViewModel.sortCountries(SortType.NAME);
-            }
+        sortByNameBtn.setOnClickListener(view -> {
+            //sort countries by name and update livedata
+            mainActivityViewModel.sortCountries(SortType.NAME);
         });
 
-        sortByAreaBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //sort countries by area and update livedata
-                mainActivityViewModel.sortCountries(SortType.AREA);
-            }
+        sortByAreaBtn.setOnClickListener(view -> {
+            //sort countries by area and update livedata
+            mainActivityViewModel.sortCountries(SortType.AREA);
         });
     }
 
 
     private void initRecyclerView() {
-        mAdapter = new RecyclerAdapter(this, mainActivityViewModel.getCountriesLiveData().getValue(), new OnCountryItemClickListener() {
+        mAdapter = new CountriesRecyclerAdapter(mainActivityViewModel.getCountriesLiveData().getValue(), new OnCountryItemClickListener() {
             @Override
             public void onItemClick(Country country) {
                 openBordersActivity(country);
@@ -130,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openBordersActivity(Country selectedCountry) {
-        //get names by codes here
+        //get country's bordering countries by codes here
        List<Country> list = getOneCountrysBordersList(selectedCountry);
         //show selected country's bordering countries
         showBorders(selectedCountry, list);
@@ -158,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Country> getOneCountrysBordersList(Country selectedCountry) {
         List<Country> list = getListOfCountryBorders(selectedCountry.getBorders());
-        Toast.makeText(getApplicationContext(), selectedCountry.getEnglishName(), Toast.LENGTH_SHORT).show();
         return list;
     }
 }

@@ -54,11 +54,9 @@ public class CountryRepository {
                 if (response != null && response.body() != null) {
                     List<Country> countriesList = response.body();
                     ArrayList<Country> countries = new ArrayList<>();
-                    String[] oneCountry = new String[countriesList.size()];
                     countriesNamesByCodeMap = new HashMap<>();
 
                     for (int i = 0; i < countriesList.size(); i++) {
-                        oneCountry[i] = countriesList.get(i).getEnglishName();
                         String name = countriesList.get(i).getEnglishName();
                         String nativeName = countriesList.get(i).getNativeName();
                         String area = countriesList.get(i).getArea();
@@ -67,7 +65,7 @@ public class CountryRepository {
                         Country newCountry = new Country(name, nativeName, area, countryCode, borders);
                         countries.add(newCountry);
                         countriesNamesByCodeMap.put(countryCode, newCountry);
-                        Log.d(TAG, "setCountries: new country added, " + nativeName + " " + name + " " + area + " borders: " + borders);
+                        Log.d(TAG, "setCountries: new country added, " + nativeName + " " + name + " " + area);
                     }
                     countriesDataSet = countries;
                     //set the retrieved data

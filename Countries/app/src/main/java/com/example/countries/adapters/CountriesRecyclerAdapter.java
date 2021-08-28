@@ -1,82 +1,53 @@
 package com.example.countries.adapters;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.countries.OnCountryItemClickListener;
 import com.example.countries.R;
 import com.example.countries.models.Country;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CountryViewHolder> {
-    private static final String TAG = "RecyclerAdapter";
+public class CountriesRecyclerAdapter extends RecyclerView.Adapter<CountriesRecyclerAdapter.CountryViewHolder> {
 
-    private Context context;
     private List<Country> allCountries;
-
-    private ArrayList<String> nativeNames;
-    private ArrayList<String> englishNames;
-    private ArrayList<String> areas;
-    private ArrayList<String[]> countryCodesArray;
-    private ArrayList<String> code;
 
     private final OnCountryItemClickListener listener;
 
     //constructor with list of countries
-    public RecyclerAdapter(Activity activity, List<Country> countries, OnCountryItemClickListener listener) {
-
+    public CountriesRecyclerAdapter(List<Country> countries, OnCountryItemClickListener listener) {
         this.listener = listener;
         this.allCountries = countries;
-        this.nativeNames = new ArrayList<>();
-        this.englishNames = new ArrayList<>();
-        this.areas = new ArrayList<>();
-        this.code = new ArrayList<>();
-        this.countryCodesArray = new ArrayList<String[]>();
-        this.context = activity;
-
-        if (countries != null && countries.size() > 0) {
-            for (Country country : countries) {
-                if (country != null) {
-                    nativeNames.add(country.getNativeName());
-                    englishNames.add(country.getEnglishName());
-                    areas.add(country.getArea());
-                    countryCodesArray.add(country.getBorders());
-                    code.add(country.getArea());
-                }
-            }
-        }
     }
 
     @Override
     public CountryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_country_listitem, parent, false);
-        CountryViewHolder viewHolder = new CountryViewHolder(view);
-        return viewHolder;
+        return new CountryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter.CountryViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder called");
-
-        holder.countryNativeName.setText(nativeNames.get(position));
-        holder.countryEnglishName.setText(englishNames.get(position));
-        holder.countryArea.setText(areas.get(position));
-
+    public void onBindViewHolder(CountriesRecyclerAdapter.CountryViewHolder holder, int position) {
+        holder.countryEnglishName.setText(allCountries.get(position).getEnglishName());
+        holder.countryNativeName.setText(allCountries.get(position).getNativeName());
+        holder.countryArea.setText(allCountries.get(position).getArea());
     }
 
     @Override
     public int getItemCount() {
-        return englishNames.size();
+        if (allCountries != null)
+            return allCountries.size();
+        return 0;
     }
 
+    //main screen countries view holder
     public class CountryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView countryNativeName;

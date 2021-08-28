@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Countries</string>
+    <string name="borders_toolbar_title">Bordering countries</string>
 
     <string name="EXTRA_COUNTRY_NAME">EXTRA_COUNTRY_NAME</string>
     <string name="EXTRA_COUNTRY_BORDERS_CODES">EXTRA_COUNTRY_BORDERS_CODES</string>
