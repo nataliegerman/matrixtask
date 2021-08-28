@@ -75,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
                     //hide spinner
                     spinner.setVisibility(View.INVISIBLE);
                 }
-                mAdapter.notifyDataSetChanged();
+                if (mAdapter != null)
+                    mAdapter.notifyDataSetChanged();
             }
         });
 
@@ -118,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void openBordersActivity(Country selectedCountry) {
         //get country's bordering countries by codes here
-       List<Country> list = getOneCountrysBordersList(selectedCountry);
+        List<Country> list = getOneCountrysBordersList(selectedCountry);
         //show selected country's bordering countries
         showBorders(selectedCountry, list);
     }
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.EXTRA_BORDERING_COUNTRIES_LIST), (Serializable) list);
 
         MainActivity.this.startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private List<Country> getOneCountrysBordersList(Country selectedCountry) {
