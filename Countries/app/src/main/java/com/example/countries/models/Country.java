@@ -80,6 +80,11 @@ public class Country implements Serializable {
         return area;
     }
 
+    public void validateNameAndArea() {
+        name = validateEnglishName(name);
+        area = validateArea(area);
+    }
+
     private String validateEnglishName(String name) {
         if(name == null) {
             return ""; //in case the name is null replace with empty string

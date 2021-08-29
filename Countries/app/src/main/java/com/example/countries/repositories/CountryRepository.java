@@ -53,21 +53,17 @@ public class CountryRepository {
             public void onResponse(Call<List<Country>> call, Response<List<Country>> response) {
                 if (response != null && response.body() != null) {
                     List<Country> countriesList = response.body();
-                    ArrayList<Country> countries = new ArrayList<>();
                     countriesNamesByCodeMap = new HashMap<>();
 
-                    for (int i = 0; i < countriesList.size(); i++) {
-                        String name = countriesList.get(i).getEnglishName();
-                        String nativeName = countriesList.get(i).getNativeName();
-                        String area = countriesList.get(i).getArea();
-                        String countryCode = countriesList.get(i).getAlpha3Code();
-                        String[] borders = countriesList.get(i).getBorders();
-                        Country newCountry = new Country(name, nativeName, area, countryCode, borders);
-                        countries.add(newCountry);
-                        countriesNamesByCodeMap.put(countryCode, newCountry);
-                        Log.d(TAG, "setCountries: new country added, " + nativeName + " " + name + " " + area);
+                    for (Country country : countriesList) {
+                        //creating map of countries by their code
+                        // in order to retrieve fast when showing selected country's bordering countries
+                        country.validateNameAndArea();
+                        countriesNamesByCodeMap.put(country.getAlpha3Code(), country);
+                        Log.d(TAG, "setCountries: new country added, " + country.getEnglishName() + " " + country.getNativeName() + " " + country.getArea());
                     }
-                    countriesDataSet = countries;
+
+                    countriesDataSet = (ArrayList<Country>) countriesList;
                     //set the retrieved data
                     countriesLiveData.setValue(countriesDataSet);
                     countriesNamesByCodeLiveData.setValue(countriesNamesByCodeMap);
@@ -82,8 +78,4 @@ public class CountryRepository {
         });
     }
 
-
-    public Map<String, Country> getCountriesNamesByCodeMap() {
-        return countriesNamesByCodeMap;
-    }
 }
